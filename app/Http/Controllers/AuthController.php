@@ -101,8 +101,8 @@ public function recuperarPassword(Request $request)
     $token = \Illuminate\Support\Str::random(60);
 
     // Guardar token
-    DB::table('password_resets_custom')->where('correo', $request->correo)->delete();
-    DB::table('password_resets_custom')->insert([
+    DB::table('password_reset_tokens')->where('correo', $request->correo)->delete();
+    DB::table('password_reset_tokens')->insert([
         'correo' => $request->correo,
         'token'  => $token,
     ]);
@@ -131,7 +131,7 @@ public function recuperarPassword(Request $request)
 
 public function recuperarForm($token)
 {
-    $reset = DB::table('password_resets_custom')->where('token', $token)->first();
+    $reset = DB::table('password_reset_tokens')->where('token', $token)->first();
     if (!$reset) return redirect('/login')->with('error', 'Token inválido o expirado');
     return view('recuperar-nueva', compact('token'));
 }
@@ -142,14 +142,14 @@ public function recuperarNueva(Request $request, $token)
         'password' => 'required|min:4|confirmed'
     ]);
 
-    $reset = DB::table('password_resets_custom')->where('token', $token)->first();
+    $reset = DB::table('password_reset_tokens')->where('token', $token)->first();
     if (!$reset) return redirect('/login')->with('error', 'Token inválido o expirado');
 
     DB::table('usuario')->where('correo', $reset->correo)->update([
         'password' => bcrypt($request->password)
     ]);
 
-    DB::table('password_resets_custom')->where('token', $token)->delete();
+    DB::table('password_reset_tokens')->where('token', $token)->delete();
 
     return redirect('/login')->with('success', 'Contraseña actualizada correctamente');
 }
