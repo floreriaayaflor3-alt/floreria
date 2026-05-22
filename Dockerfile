@@ -26,8 +26,8 @@ RUN chown -R www-data:www-data /var/www/html/storage /var/www/html/bootstrap/cac
 RUN chmod -R 775 /var/www/html/storage /var/www/html/bootstrap/cache
 
 # Variables de entorno de Laravel
-RUN cp .env.example .env || true
-RUN php artisan key:generate --force
+# env viene de Render
+# key se toma de ENV
 
 EXPOSE 80
 
