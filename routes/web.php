@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -15,6 +15,8 @@ Route::get('/registro', [AuthController::class, 'vistaRegistro']);
 Route::post('/registro', [AuthController::class, 'registrar']);
 Route::get('/recuperar', [AuthController::class, 'recuperar']);
 Route::post('/recuperar', [AuthController::class, 'recuperarPassword']);
+Route::get('/recuperar/reset/{token}', [AuthController::class, 'recuperarForm']);
+Route::post('/recuperar/reset/{token}', [AuthController::class, 'recuperarNueva']);
 
 Route::get('/principal', function () {
     if (!session('usuario')) return redirect('/');

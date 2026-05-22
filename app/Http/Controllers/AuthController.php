@@ -81,32 +81,76 @@ class AuthController extends Controller
     }
 
     public function recuperar()
-    {
-        return view('recuperar');
+{
+    return view('recuperar');
+}
+
+public function recuperarPassword(Request $request)
+{
+    $request->validate([
+        'correo' => 'required|email'
+    ]);
+
+    $usuario = DB::table('usuario')->where('correo', $request->correo)->first();
+
+    if (!$usuario) {
+        return back()->with('error', 'No existe una cuenta con ese correo');
     }
 
-    public function recuperarPassword(Request $request)
-    {
-        $request->validate([
-            'usuario' => 'required',
-            'nueva_password' => 'required|min:4'
-        ]);
+    // Generar token único
+    $token = \Illuminate\Support\Str::random(60);
 
-        $usuario = DB::table('usuario')
-            ->where('usuario', $request->usuario)
-            ->first();
+    // Guardar token
+    DB::table('password_resets_custom')->where('correo', $request->correo)->delete();
+    DB::table('password_resets_custom')->insert([
+        'correo' => $request->correo,
+        'token'  => $token,
+    ]);
 
-        if (!$usuario) {
-            return back()->with('error', 'El usuario no existe');
-        }
+    // Enviar correo
+    $link = url('/recuperar/reset/' . $token);
 
-        DB::table('usuario')
-            ->where('id_usuario', $usuario->id_usuario)
-            ->update([
-                'password' => bcrypt($request->nueva_password)
-            ]);
+    \Illuminate\Support\Facades\Mail::send([], [], function($mail) use ($request, $link) {
+        $mail->to($request->correo)
+             ->subject('Recuperar contraseña - AYAFlora')
+             ->html("
+                <div style='font-family:sans-serif; max-width:500px; margin:auto;'>
+                    <h2 style='color:#7b2d5b;'>🌸 AYAFlora</h2>
+                    <p>Recibimos una solicitud para restablecer tu contraseña.</p>
+                    <p>Haz clic en el botón para crear una nueva contraseña:</p>
+                    <a href='{$link}' style='background:#7b2d5b; color:white; padding:12px 24px; border-radius:8px; text-decoration:none; display:inline-block; margin:16px 0;'>
+                        Restablecer contraseña
+                    </a>
+                    <p style='color:#888; font-size:12px;'>Este enlace expira en 60 minutos. Si no solicitaste esto, ignora este correo.</p>
+                </div>
+             ");
+    });
 
-        return redirect('/login')
-            ->with('success', 'Contraseña actualizada correctamente');
-    }
+    return back()->with('success', 'Te enviamos un correo con el link de recuperación');
+}
+
+public function recuperarForm($token)
+{
+    $reset = DB::table('password_resets_custom')->where('token', $token)->first();
+    if (!$reset) return redirect('/login')->with('error', 'Token inválido o expirado');
+    return view('recuperar-nueva', compact('token'));
+}
+
+public function recuperarNueva(Request $request, $token)
+{
+    $request->validate([
+        'password' => 'required|min:4|confirmed'
+    ]);
+
+    $reset = DB::table('password_resets_custom')->where('token', $token)->first();
+    if (!$reset) return redirect('/login')->with('error', 'Token inválido o expirado');
+
+    DB::table('usuario')->where('correo', $reset->correo)->update([
+        'password' => bcrypt($request->password)
+    ]);
+
+    DB::table('password_resets_custom')->where('token', $token)->delete();
+
+    return redirect('/login')->with('success', 'Contraseña actualizada correctamente');
+}
 }
