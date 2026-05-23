@@ -145,7 +145,7 @@ public function recuperarNueva(Request $request, $token)
     $reset = DB::table('password_reset_tokens')->where('token', $token)->first();
     if (!$reset) return redirect('/login')->with('error', 'Token inválido o expirado');
 
-    DB::table('usuario')->where('email', $reset->email)->update([
+    DB::table('usuario')->where('correo', $reset->email)->update([
         'password' => bcrypt($request->password)
     ]);
 
