@@ -91,7 +91,7 @@ public function recuperarPassword(Request $request)
         'correo' => 'required|email'
     ]);
 
-    $usuario = DB::table('usuario')->where('email', $request->correo)->first();
+    $usuario = DB::table('usuario')->where('correo', $request->correo)->first();
 
     if (!$usuario) {
         return back()->with('error', 'No existe una cuenta con ese correo');
