@@ -23,6 +23,7 @@ body { background: #f8f0f4; }
             <a class="nav-link" href="/crud/proveedores">Proveedores</a>
             <a class="nav-link" href="/crud/clientes">Clientes</a>
             <a class="nav-link" href="/crud/trabajadores">Trabajadores</a>
+            <a class="nav-link" href="/crud/promociones">Promociones</a>
             <a class="nav-link text-warning" href="/logout">Cerrar sesión</a>
         </div>
     </div>
@@ -61,8 +62,16 @@ body { background: #f8f0f4; }
                         <td>{{ $c->direccion }}</td>
                         <td>{{ $c->colonia }}</td>
                         <td>{{ $c->municipio }}</td>
-                        <td>{{ $c->estado }}</td>
                         <td>
+                            <span class="badge {{ $c->estado == 'Activo' ? 'bg-success' : 'bg-secondary' }}">
+                                {{ $c->estado }}
+                            </span>
+                        </td>
+                        <td>
+                            <a href="/crud/clientes/{{ $c->id_cliente }}/toggle"
+                               class="btn btn-sm {{ $c->estado == 'Activo' ? 'btn-warning' : 'btn-success' }}">
+                                {{ $c->estado == 'Activo' ? '🔴 Desactivar' : '🟢 Activar' }}
+                            </a>
                             <a href="/crud/clientes/{{ $c->id_cliente }}/eliminar" class="btn btn-sm btn-danger"
                                 onclick="return confirm('¿Eliminar este cliente?')">Eliminar</a>
                         </td>

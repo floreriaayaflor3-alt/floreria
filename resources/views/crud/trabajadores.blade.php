@@ -23,6 +23,7 @@ body { background: #f8f0f4; }
             <a class="nav-link" href="/crud/proveedores">Proveedores</a>
             <a class="nav-link" href="/crud/clientes">Clientes</a>
             <a class="nav-link" href="/crud/trabajadores">Trabajadores</a>
+            <a class="nav-link" href="/crud/promociones">Promociones</a>
             <a class="nav-link text-warning" href="/logout">Cerrar sesión</a>
         </div>
     </div>
@@ -103,8 +104,16 @@ body { background: #f8f0f4; }
                     <td>{{ $t->usuario }}</td>
                     <td>{{ $t->nombre_rol }}</td>
                     <td>{{ $t->telefono }}</td>
-                    <td><span class="badge {{ $t->estado == 'Activo' ? 'bg-success' : 'bg-secondary' }}">{{ $t->estado }}</span></td>
                     <td>
+                        <span class="badge {{ $t->estado == 'Activo' ? 'bg-success' : 'bg-secondary' }}">
+                            {{ $t->estado }}
+                        </span>
+                    </td>
+                    <td>
+                        <a href="/crud/trabajadores/{{ $t->id_trabajador }}/toggle"
+                           class="btn btn-sm {{ $t->estado == 'Activo' ? 'btn-warning' : 'btn-success' }}">
+                            {{ $t->estado == 'Activo' ? '🔴 Desactivar' : '🟢 Activar' }}
+                        </a>
                         <a href="/crud/trabajadores/{{ $t->id_trabajador }}/editar" class="btn btn-sm btn-warning">Editar</a>
                         <a href="/crud/trabajadores/{{ $t->id_trabajador }}/eliminar" class="btn btn-sm btn-danger"
                             onclick="return confirm('¿Eliminar este trabajador?')">Eliminar</a>

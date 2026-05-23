@@ -370,4 +370,46 @@ class CrudController extends Controller
 
         return redirect('/carrito');
     }
+
+    // Toggle estado cliente
+public function clientesToggle($id)
+{
+    if ($r = $this->verificarAdmin()) return $r;
+    $cliente = DB::table('cliente')->where('id_cliente', $id)->first();
+    $nuevoEstado = $cliente->estado == 'Activo' ? 'Inactivo' : 'Activo';
+    DB::table('cliente')->where('id_cliente', $id)->update(['estado' => $nuevoEstado]);
+    return redirect('/crud/clientes')->with('success', 'Estado del cliente actualizado');
+}
+
+// Toggle estado trabajador
+public function trabajadoresToggle($id)
+{
+    if ($r = $this->verificarAdmin()) return $r;
+    $trabajador = DB::table('trabajador')->where('id_trabajador', $id)->first();
+    $nuevoEstado = $trabajador->estado == 'Activo' ? 'Inactivo' : 'Activo';
+    DB::table('trabajador')->where('id_trabajador', $id)->update(['estado' => $nuevoEstado]);
+    return redirect('/crud/trabajadores')->with('success', 'Estado del trabajador actualizado');
+}
+
+// Toggle estado promocion
+public function promocionesToggle($id)
+{
+    if ($r = $this->verificarAdmin()) return $r;
+    $promo = DB::table('promocion')->where('id_promocion', $id)->first();
+    $nuevoEstado = $promo->estado == 'Activo' ? 'Inactivo' : 'Activo';
+    DB::table('promocion')->where('id_promocion', $id)->update(['estado' => $nuevoEstado]);
+    return redirect('/crud/promociones')->with('success', 'Estado de la promoción actualizado');
+}
+
+// Reciclar promocion (actualizar fechas)
+public function promocionesReciclar(Request $request, $id)
+{
+    if ($r = $this->verificarAdmin()) return $r;
+    DB::table('promocion')->where('id_promocion', $id)->update([
+        'fecha_inicio' => $request->fecha_inicio,
+        'fecha_fin'    => $request->fecha_fin,
+        'estado'       => 'Activo'
+    ]);
+    return redirect('/crud/promociones')->with('success', 'Promoción reciclada correctamente');
+}
 }

@@ -1,5 +1,4 @@
 @php
-    // Protección extra en vista: solo admin puede ver esto
     if (session('rol') !== 'admin') {
         header('Location: /principal');
         exit;
@@ -9,112 +8,63 @@
 <!DOCTYPE html>
 <html lang="es">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>AYAFlora – Promociones</title>
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
-    <style>
-        :root {
-            --rosa:   #7b2d5b;
-            --rosa-l: #f5e6ef;
-            --rosa-b: #f0dce9;
-        }
-        body { background: #faf5f8; font-family: 'Segoe UI', sans-serif; }
-
-        /* ── Navbar simple ── */
-        .ayaf-nav {
-            background: var(--rosa);
-            padding: .75rem 1.5rem;
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-        }
-        .ayaf-nav .brand { color: #fff; font-weight: 800; font-size: 1.2rem; text-decoration: none; }
-        .ayaf-nav .back-btn {
-            color: #fff;
-            text-decoration: none;
-            font-size: .88rem;
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            opacity: .85;
-            transition: opacity .2s;
-        }
-        .ayaf-nav .back-btn:hover { opacity: 1; color: #fff; }
-
-        /* ── Contenedor ── */
-        .page-wrap { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
-
-        /* ── Card ── */
-        .card-ayaf {
-            background: #fff;
-            border-radius: 14px;
-            box-shadow: 0 4px 20px rgba(123,45,91,.10);
-            border: none;
-        }
-        .card-header-ayaf {
-            background: var(--rosa-l);
-            border-bottom: 1.5px solid var(--rosa-b);
-            border-radius: 14px 14px 0 0;
-            padding: .9rem 1.2rem;
-            display: flex;
-            align-items: center;
-            gap: 8px;
-        }
-        .card-header-ayaf h5 { margin: 0; font-weight: 700; color: var(--rosa); font-size: 1rem; }
-
-        /* ── Tabla ── */
-        .table thead th {
-            background: var(--rosa-l);
-            color: var(--rosa);
-            font-weight: 700;
-            font-size: .82rem;
-            text-transform: uppercase;
-            letter-spacing: .04em;
-            border: none;
-        }
-        .table tbody tr:hover { background: #fdf5f9; }
-        .table td { vertical-align: middle; font-size: .88rem; }
-
-        /* ── Badges estado ── */
-        .badge-activo   { background: #d4edda; color: #1a5c2a; font-size: .75rem; padding: 3px 10px; border-radius: 999px; font-weight: 600; }
-        .badge-inactivo { background: #f8d7da; color: #721c24; font-size: .75rem; padding: 3px 10px; border-radius: 999px; font-weight: 600; }
-
-        /* ── Descuento pill ── */
-        .pill-desc {
-            background: var(--rosa);
-            color: #fff;
-            font-size: .75rem;
-            font-weight: 700;
-            padding: 3px 12px;
-            border-radius: 999px;
-        }
-
-        /* ── Botones ── */
-        .btn-rosa       { background: var(--rosa); color: #fff; border: none; }
-        .btn-rosa:hover { background: #5e2246; color: #fff; }
-        .btn-edit       { background: #fff3cd; color: #856404; border: 1px solid #ffc107; font-size: .8rem; padding: 3px 10px; border-radius: 6px; }
-        .btn-edit:hover { background: #ffc107; color: #fff; }
-        .btn-del        { background: #f8d7da; color: #842029; border: 1px solid #f5c6cb; font-size: .8rem; padding: 3px 10px; border-radius: 6px; }
-        .btn-del:hover  { background: #dc3545; color: #fff; }
-
-        /* ── Formulario ── */
-        .form-label { font-size: .85rem; font-weight: 600; color: #4a1b35; }
-        .form-control:focus, .form-select:focus {
-            border-color: var(--rosa);
-            box-shadow: 0 0 0 .2rem rgba(123,45,91,.15);
-        }
-        .section-divider {
-            border: none;
-            border-top: 1.5px solid var(--rosa-b);
-            margin: 1.5rem 0;
-        }
-    </style>
+<meta charset="UTF-8">
+<title>AYAFlora – Promociones</title>
+<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.0/font/bootstrap-icons.css" rel="stylesheet">
+<style>
+    :root {
+        --rosa:   #7b2d5b;
+        --rosa-l: #f5e6ef;
+        --rosa-b: #f0dce9;
+    }
+    body { background: #faf5f8; font-family: 'Segoe UI', sans-serif; }
+    .ayaf-nav {
+        background: var(--rosa);
+        padding: .75rem 1.5rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+    }
+    .ayaf-nav .brand { color: #fff; font-weight: 800; font-size: 1.2rem; text-decoration: none; }
+    .ayaf-nav .back-btn {
+        color: #fff; text-decoration: none; font-size: .88rem;
+        display: flex; align-items: center; gap: 5px; opacity: .85; transition: opacity .2s;
+    }
+    .ayaf-nav .back-btn:hover { opacity: 1; color: #fff; }
+    .page-wrap { max-width: 1100px; margin: 2rem auto; padding: 0 1rem; }
+    .card-ayaf { background: #fff; border-radius: 14px; box-shadow: 0 4px 20px rgba(123,45,91,.10); border: none; }
+    .card-header-ayaf {
+        background: var(--rosa-l); border-bottom: 1.5px solid var(--rosa-b);
+        border-radius: 14px 14px 0 0; padding: .9rem 1.2rem;
+        display: flex; align-items: center; gap: 8px;
+    }
+    .card-header-ayaf h5 { margin: 0; font-weight: 700; color: var(--rosa); font-size: 1rem; }
+    .table thead th {
+        background: var(--rosa-l); color: var(--rosa); font-weight: 700;
+        font-size: .82rem; text-transform: uppercase; letter-spacing: .04em; border: none;
+    }
+    .table tbody tr:hover { background: #fdf5f9; }
+    .table td { vertical-align: middle; font-size: .88rem; }
+    .badge-activo   { background: #d4edda; color: #1a5c2a; font-size: .75rem; padding: 3px 10px; border-radius: 999px; font-weight: 600; }
+    .badge-inactivo { background: #f8d7da; color: #721c24; font-size: .75rem; padding: 3px 10px; border-radius: 999px; font-weight: 600; }
+    .pill-desc { background: var(--rosa); color: #fff; font-size: .75rem; font-weight: 700; padding: 3px 12px; border-radius: 999px; }
+    .btn-rosa       { background: var(--rosa); color: #fff; border: none; }
+    .btn-rosa:hover { background: #5e2246; color: #fff; }
+    .btn-edit       { background: #fff3cd; color: #856404; border: 1px solid #ffc107; font-size: .8rem; padding: 3px 10px; border-radius: 6px; }
+    .btn-edit:hover { background: #ffc107; color: #fff; }
+    .btn-del        { background: #f8d7da; color: #842029; border: 1px solid #f5c6cb; font-size: .8rem; padding: 3px 10px; border-radius: 6px; }
+    .btn-del:hover  { background: #dc3545; color: #fff; }
+    .form-label { font-size: .85rem; font-weight: 600; color: #4a1b35; }
+    .form-control:focus, .form-select:focus {
+        border-color: var(--rosa);
+        box-shadow: 0 0 0 .2rem rgba(123,45,91,.15);
+    }
+    .section-divider { border: none; border-top: 1.5px solid var(--rosa-b); margin: 1.5rem 0; }
+</style>
 </head>
 <body>
 
-{{-- Navbar --}}
 <nav class="ayaf-nav">
     <a href="/principal" class="brand">🌸 AYAFlora</a>
     <a href="/principal" class="back-btn"><i class="bi bi-arrow-left"></i> Volver</a>
@@ -122,7 +72,6 @@
 
 <div class="page-wrap">
 
-    {{-- Alertas --}}
     @if(session('success'))
         <div class="alert alert-success alert-dismissible fade show rounded-3 mb-3" role="alert">
             <i class="bi bi-check-circle-fill me-2"></i>{{ session('success') }}
@@ -136,32 +85,22 @@
         </div>
     @endif
 
-    {{-- ════════════════════════════════════
-         FORMULARIO CREAR / EDITAR
-    ════════════════════════════════════ --}}
+    {{-- FORMULARIO --}}
     <div class="card-ayaf mb-4">
         <div class="card-header-ayaf">
             <i class="bi bi-{{ isset($promocion) ? 'pencil-square' : 'plus-circle-fill' }}" style="color:var(--rosa);font-size:1.1rem;"></i>
             <h5>{{ isset($promocion) ? 'Editar Promoción' : 'Nueva Promoción' }}</h5>
         </div>
         <div class="p-4">
-            @if(isset($promocion))
-                <form action="/crud/promociones/{{ $promocion->id_promocion }}/actualizar" method="POST">
-            @else
-                <form action="/crud/promociones" method="POST">
-            @endif
+            <form action="{{ isset($promocion) ? '/crud/promociones/'.$promocion->id_promocion.'/actualizar' : '/crud/promociones' }}" method="POST">
                 @csrf
-
                 <div class="row g-3">
-                    {{-- Título --}}
                     <div class="col-md-6">
                         <label class="form-label">Título <span class="text-danger">*</span></label>
                         <input type="text" name="titulo" class="form-control" required maxlength="100"
                                placeholder="Ej. Descuento de Graduación"
                                value="{{ isset($promocion) ? $promocion->titulo : old('titulo') }}">
                     </div>
-
-                    {{-- Descuento --}}
                     <div class="col-md-3">
                         <label class="form-label">Descuento <span class="text-danger">*</span></label>
                         <input type="text" name="descuento" class="form-control" required maxlength="20"
@@ -169,8 +108,6 @@
                                value="{{ isset($promocion) ? $promocion->descuento : old('descuento') }}">
                         <div class="form-text">Puede ser porcentaje o texto (Gratis, 2x1…)</div>
                     </div>
-
-                    {{-- Estado (solo en edición) --}}
                     @if(isset($promocion))
                     <div class="col-md-3">
                         <label class="form-label">Estado</label>
@@ -180,23 +117,17 @@
                         </select>
                     </div>
                     @endif
-
-                    {{-- Descripción --}}
                     <div class="col-12">
                         <label class="form-label">Descripción</label>
                         <textarea name="descripcion" class="form-control" rows="2"
                                   placeholder="Describe brevemente la promoción…">{{ isset($promocion) ? $promocion->descripcion : old('descripcion') }}</textarea>
                     </div>
-
-                    {{-- Imagen URL --}}
                     <div class="col-md-6">
                         <label class="form-label">URL de imagen <span class="text-muted fw-normal">(opcional)</span></label>
                         <input type="url" name="imagen" class="form-control"
                                placeholder="https://…"
                                value="{{ isset($promocion) ? $promocion->imagen : old('imagen') }}">
                     </div>
-
-                    {{-- Fechas --}}
                     <div class="col-md-3">
                         <label class="form-label">Fecha inicio <span class="text-danger">*</span></label>
                         <input type="date" name="fecha_inicio" class="form-control" required
@@ -208,9 +139,7 @@
                                value="{{ isset($promocion) ? $promocion->fecha_fin : old('fecha_fin') }}">
                     </div>
                 </div>
-
                 <hr class="section-divider">
-
                 <div class="d-flex gap-2">
                     <button type="submit" class="btn btn-rosa px-4">
                         <i class="bi bi-{{ isset($promocion) ? 'save' : 'plus-lg' }} me-2"></i>
@@ -222,14 +151,11 @@
                         </a>
                     @endif
                 </div>
-
             </form>
         </div>
     </div>
 
-    {{-- ════════════════════════════════════
-         TABLA DE PROMOCIONES
-    ════════════════════════════════════ --}}
+    {{-- TABLA --}}
     <div class="card-ayaf">
         <div class="card-header-ayaf">
             <i class="bi bi-tag-fill" style="color:var(--rosa);font-size:1.1rem;"></i>
@@ -278,7 +204,17 @@
                                 @endif
                             </td>
                             <td class="text-center">
-                                <div class="d-flex gap-1 justify-content-center">
+                                <div class="d-flex gap-1 justify-content-center flex-wrap">
+                                    <a href="/crud/promociones/{{ $p->id_promocion }}/toggle"
+                                       class="btn btn-sm {{ $p->estado == 'Activo' ? 'btn-warning' : 'btn-success' }}">
+                                        {{ $p->estado == 'Activo' ? '🔴 Desactivar' : '🟢 Activar' }}
+                                    </a>
+                                    @if($p->estado == 'Inactivo')
+                                    <button class="btn btn-sm btn-info text-white" data-bs-toggle="collapse"
+                                            data-bs-target="#reciclar{{ $p->id_promocion }}">
+                                        ♻️ Reciclar
+                                    </button>
+                                    @endif
                                     <a href="/crud/promociones/{{ $p->id_promocion }}/editar" class="btn btn-edit">
                                         <i class="bi bi-pencil"></i>
                                     </a>
@@ -288,6 +224,16 @@
                                         <i class="bi bi-trash"></i>
                                     </a>
                                 </div>
+                                @if($p->estado == 'Inactivo')
+                                <div class="collapse mt-2" id="reciclar{{ $p->id_promocion }}">
+                                    <form method="POST" action="/crud/promociones/{{ $p->id_promocion }}/reciclar">
+                                        @csrf
+                                        <input type="date" name="fecha_inicio" class="form-control form-control-sm mb-1" required>
+                                        <input type="date" name="fecha_fin" class="form-control form-control-sm mb-1" required>
+                                        <button class="btn btn-sm btn-success w-100">Activar con nuevas fechas</button>
+                                    </form>
+                                </div>
+                                @endif
                             </td>
                         </tr>
                         @endforeach
@@ -298,11 +244,10 @@
         </div>
     </div>
 
-</div>{{-- /page-wrap --}}
+</div>
 
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
 <script>
-    // Validar que fecha_fin >= fecha_inicio
     document.querySelector('form').addEventListener('submit', function(e) {
         const inicio = document.querySelector('[name="fecha_inicio"]').value;
         const fin    = document.querySelector('[name="fecha_fin"]').value;

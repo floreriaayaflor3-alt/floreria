@@ -1,4 +1,4 @@
-<?php
+﻿<?php
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\AuthController;
@@ -17,6 +17,10 @@ Route::get('/recuperar', [AuthController::class, 'recuperar']);
 Route::post('/recuperar', [AuthController::class, 'recuperarPassword']);
 Route::get('/recuperar/reset/{token}', [AuthController::class, 'recuperarForm']);
 Route::post('/recuperar/reset/{token}', [AuthController::class, 'recuperarNueva']);
+Route::get('/crud/clientes/{id}/toggle', [CrudController::class, 'clientesToggle']);
+Route::get('/crud/trabajadores/{id}/toggle', [CrudController::class, 'trabajadoresToggle']);
+Route::get('/crud/promociones/{id}/toggle', [CrudController::class, 'promocionesToggle']);
+Route::post('/crud/promociones/{id}/reciclar', [CrudController::class, 'promocionesReciclar']);
 
 Route::get('/principal', function () {
     if (!session('usuario')) return redirect('/');
