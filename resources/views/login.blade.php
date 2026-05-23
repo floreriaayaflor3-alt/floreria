@@ -264,7 +264,7 @@ body{
 
             <div class="forgot">
                 ¿Olvidaste tu contraseña?
-                <a href="/recuperar-password">Click aquí</a>
+                <a href="/recuperar">Click aquí</a>
             </div>
         </form>
 
