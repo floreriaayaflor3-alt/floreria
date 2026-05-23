@@ -62,7 +62,7 @@ class AuthController extends Controller
             'id_rol' => 4, // Cliente
             'usuario' => $request->usuario,
             'password' => bcrypt($request->password),
-            'correo' => $request->correo,
+            'email' => $request->correo,
             'estado_usuario' => 'Activo'
         ]);
 
@@ -91,7 +91,7 @@ public function recuperarPassword(Request $request)
         'correo' => 'required|email'
     ]);
 
-    $usuario = DB::table('usuario')->where('correo', $request->correo)->first();
+    $usuario = DB::table('usuario')->where('email', $request->correo)->first();
 
     if (!$usuario) {
         return back()->with('error', 'No existe una cuenta con ese correo');
@@ -101,9 +101,9 @@ public function recuperarPassword(Request $request)
     $token = \Illuminate\Support\Str::random(60);
 
     // Guardar token
-    DB::table('password_reset_tokens')->where('correo', $request->correo)->delete();
+    DB::table('password_reset_tokens')->where('email', $request->correo)->delete();
     DB::table('password_reset_tokens')->insert([
-        'correo' => $request->correo,
+        'email' => $request->correo,
         'token'  => $token,
     ]);
 
@@ -145,7 +145,7 @@ public function recuperarNueva(Request $request, $token)
     $reset = DB::table('password_reset_tokens')->where('token', $token)->first();
     if (!$reset) return redirect('/login')->with('error', 'Token inválido o expirado');
 
-    DB::table('usuario')->where('correo', $reset->correo)->update([
+    DB::table('usuario')->where('email', $reset->email)->update([
         'password' => bcrypt($request->password)
     ]);
 
