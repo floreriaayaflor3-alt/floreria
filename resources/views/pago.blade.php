@@ -55,6 +55,7 @@ body{
 .metodo-card.selected { border-color: #7b2d5b; background: #fdf5f9; }
 .metodo-card input { display: none; }
 #stripe-section { display: none; margin-top: 16px; }
+#info-transferencia { display: none; margin-top: 16px; }
 </style>
 </head>
 <body>
@@ -142,6 +143,19 @@ body{
                 </div>
                 @endforeach
 
+                {{-- Info transferencia --}}
+                <div id="info-transferencia">
+                    <div class="p-3 rounded-3" style="background:#f5e6ef; border-left: 4px solid #7b2d5b;">
+                        <h6 class="fw-bold mb-2" style="color:#7b2d5b;">🏦 Datos para transferencia</h6>
+                        <p class="mb-1"><strong>Banco:</strong> BBVA</p>
+                        <p class="mb-1"><strong>Titular:</strong> AYAFlora S.A. de C.V.</p>
+                        <p class="mb-1"><strong>CLABE:</strong> 012345678901234567</p>
+                        <p class="mb-1"><strong>Número de cuenta:</strong> 1234567890</p>
+                        <p class="mb-0 text-muted small">⚠️ Una vez realizada la transferencia envía tu comprobante a <strong>floreriaayaflor3@gmail.com</strong></p>
+                    </div>
+                </div>
+
+                {{-- Stripe --}}
                 <div id="stripe-section">
                     <label class="form-label fw-bold mt-2">Datos de tu tarjeta</label>
                     <div id="card-element"></div>
@@ -192,14 +206,11 @@ let elements    = null;
 let cardElement = null;
 
 window.addEventListener('DOMContentLoaded', () => {
-
-    // ── Inicializar Stripe ──────────────────────────────────────────
     if (!stripePublicKey) {
         console.error('Clave pública de Stripe no encontrada.');
     } else {
         stripe   = Stripe(stripePublicKey);
         elements = stripe.elements();
-
         cardElement = elements.create('card', {
             style: {
                 base: {
@@ -211,21 +222,18 @@ window.addEventListener('DOMContentLoaded', () => {
                 invalid: { color: '#dc3545' }
             }
         });
-
         cardElement.mount('#card-element');
-
         cardElement.on('change', e => {
-            document.getElementById('card-errors').textContent =
-                e.error ? e.error.message : '';
+            document.getElementById('card-errors').textContent = e.error ? e.error.message : '';
         });
     }
 
-    // ── Revisar método seleccionado por defecto ─────────────────────
     const primera = document.querySelector('.metodo-card');
     if (primera) {
         const id     = primera.querySelector('input').value;
         const nombre = primera.querySelector('strong').textContent.toLowerCase();
         verificarStripe(id, nombre);
+        verificarTransferencia(nombre);
     }
 });
 
@@ -233,6 +241,12 @@ function seleccionarMetodo(el, id, nombre) {
     document.querySelectorAll('.metodo-card').forEach(c => c.classList.remove('selected'));
     el.classList.add('selected');
     verificarStripe(id, nombre);
+    verificarTransferencia(nombre);
+}
+
+function verificarTransferencia(nombre) {
+    const info = document.getElementById('info-transferencia');
+    info.style.display = nombre.includes('transferencia') ? 'block' : 'none';
 }
 
 function verificarStripe(id, nombre) {
@@ -253,17 +267,14 @@ async function pagarStripe() {
         alert('Stripe no está inicializado correctamente. Verifica la clave pública.');
         return;
     }
-
     const btn = document.getElementById('btn-stripe');
     btn.disabled    = true;
     btn.textContent = 'Procesando...';
-
     const { token, error } = await stripe.createToken(cardElement);
-
     if (error) {
         document.getElementById('card-errors').textContent = error.message;
-        btn.disabled    = false;
-        btn.innerHTML   = '💳 Pagar ${{ number_format($total, 2) }} con Stripe';
+        btn.disabled  = false;
+        btn.innerHTML = '💳 Pagar ${{ number_format($total, 2) }} con Stripe';
     } else {
         document.getElementById('stripeToken').value = token.id;
         document.getElementById('form-stripe').submit();
