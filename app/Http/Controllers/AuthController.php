@@ -62,7 +62,7 @@ class AuthController extends Controller
             'id_rol' => 4, // Cliente
             'usuario' => $request->usuario,
             'password' => bcrypt($request->password),
-            'email' => $request->correo,
+            'correo' => $request->correo,
             'estado_usuario' => 'Activo'
         ]);
 

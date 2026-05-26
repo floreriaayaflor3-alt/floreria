@@ -28,7 +28,7 @@ body{
 .login-left{
     width:60%;
     min-height:100vh;
-    color:white;
+    color:black;
     padding:80px 90px;
     display:flex;
     flex-direction:column;
