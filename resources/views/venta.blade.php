@@ -18,8 +18,6 @@
     }
     * { box-sizing: border-box; }
     body { background: var(--bg); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
-
-    /* ── Navbar ── */
     .ayaf-nav {
         background: var(--rosa);
         padding: .7rem 1.5rem;
@@ -34,64 +32,38 @@
     }
     .ayaf-nav .nav-links a:hover { background:rgba(255,255,255,.15); color:#fff; }
     .ayaf-nav .nav-links a.active { background:rgba(255,255,255,.2); color:#fff; }
-
-    /* ── Layout ── */
     .page { max-width: 1200px; margin: 2rem auto; padding: 0 1rem; }
-
-    /* ── Cards ── */
-    .card-ayaf {
-        background: #fff;
-        border-radius: 16px;
-        box-shadow: 0 4px 24px rgba(123,45,91,.08);
-        border: none;
-    }
+    .card-ayaf { background: #fff; border-radius: 16px; box-shadow: 0 4px 24px rgba(123,45,91,.08); border: none; }
     .card-head {
-        background: var(--rosa-l);
-        border-bottom: 1.5px solid var(--rosa-b);
-        border-radius: 16px 16px 0 0;
-        padding: .9rem 1.3rem;
+        background: var(--rosa-l); border-bottom: 1.5px solid var(--rosa-b);
+        border-radius: 16px 16px 0 0; padding: .9rem 1.3rem;
         display: flex; align-items: center; gap: 9px;
     }
     .card-head h5 { margin:0; font-weight:700; color:var(--rosa); font-size:1rem; }
-
-    /* ── Form labels ── */
     .form-label { font-size:.83rem; font-weight:600; color:#4a1b35; margin-bottom:4px; }
     .form-control:focus, .form-select:focus {
         border-color: var(--rosa);
         box-shadow: 0 0 0 .2rem rgba(123,45,91,.12);
     }
-
-    /* ── Producto row ── */
     .producto-row {
-        background: #fdf5f9;
-        border: 1.5px solid var(--rosa-b);
-        border-radius: 12px;
-        padding: .75rem 1rem;
-        margin-bottom: .6rem;
-        transition: border-color .2s;
+        background: #fdf5f9; border: 1.5px solid var(--rosa-b);
+        border-radius: 12px; padding: .75rem 1rem; margin-bottom: .6rem; transition: border-color .2s;
     }
     .producto-row:hover { border-color: var(--rosa); }
-
-    /* ── Totales ── */
     .totales-box {
-        background: var(--rosa-l);
-        border: 1.5px solid var(--rosa-b);
-        border-radius: 14px;
-        padding: 1.2rem 1.4rem;
+        background: var(--rosa-l); border: 1.5px solid var(--rosa-b);
+        border-radius: 14px; padding: 1.2rem 1.4rem;
     }
     .totales-box .row-t { display:flex; justify-content:space-between; margin-bottom:6px; font-size:.9rem; }
     .totales-box .row-t.total-final { font-size:1.2rem; font-weight:700; color:var(--rosa); border-top:1.5px solid var(--rosa-b); padding-top:8px; margin-top:4px; }
-
-    /* ── Botones ── */
     .btn-rosa { background:var(--rosa); color:#fff; border:none; border-radius:10px; font-weight:600; }
     .btn-rosa:hover { background:var(--rosa-d); color:#fff; }
     .btn-add { background:#fff; color:var(--rosa); border:1.5px dashed var(--rosa); border-radius:10px; font-weight:600; font-size:.85rem; transition:.2s; }
     .btn-add:hover { background:var(--rosa-l); color:var(--rosa-d); }
     .btn-quitar { background:#f8d7da; color:#842029; border:none; border-radius:8px; width:32px; height:32px; display:flex; align-items:center; justify-content:center; font-size:.85rem; transition:.2s; }
     .btn-quitar:hover { background:#dc3545; color:#fff; }
-
-    /* ── Alert ── */
     .alert-ayaf { border-radius:12px; border:none; }
+    .info-transferencia { display:none; margin-top:12px; }
 </style>
 </head>
 <body>
@@ -101,7 +73,7 @@
     <div class="nav-links">
         <a href="/venta" class="active"><i class="bi bi-cart-plus me-1"></i>Nueva venta</a>
         <a href="/venta/historial"><i class="bi bi-clock-history me-1"></i>Historial</a>
-        <a href="/logout" class="text-warning-link" style="color:rgba(255,220,100,.9)!important"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
+        <a href="/logout" style="color:rgba(255,220,100,.9)!important"><i class="bi bi-box-arrow-right me-1"></i>Salir</a>
     </div>
 </nav>
 
@@ -118,10 +90,8 @@
         @csrf
         <div class="row g-4">
 
-            {{-- ── Columna izquierda: productos ── --}}
             <div class="col-lg-8">
 
-                {{-- Info venta --}}
                 <div class="card-ayaf mb-4">
                     <div class="card-head">
                         <i class="bi bi-person-lines-fill" style="color:var(--rosa);font-size:1.1rem;"></i>
@@ -140,11 +110,22 @@
                             </div>
                             <div class="col-md-4">
                                 <label class="form-label">Método de pago <span class="text-danger">*</span></label>
-                                <select name="id_metodo" class="form-select" required>
+                                <select name="id_metodo" class="form-select" required id="select-metodo" onchange="verificarTransferencia(this)">
                                     @foreach($metodos as $m)
                                         <option value="{{ $m->id_metodo }}">{{ $m->nombre }}</option>
                                     @endforeach
                                 </select>
+                                {{-- Info transferencia --}}
+                                <div class="info-transferencia" id="info-transferencia">
+                                    <div class="p-3 rounded-3 mt-2" style="background:#f5e6ef; border-left: 4px solid #7b2d5b;">
+                                        <h6 class="fw-bold mb-2" style="color:#7b2d5b;">🏦 Datos para transferencia</h6>
+                                        <p class="mb-1"><strong>Banco:</strong> BBVA</p>
+                                        <p class="mb-1"><strong>Titular:</strong> AYAFlora S.A. de C.V.</p>
+                                        <p class="mb-1"><strong>CLABE:</strong> 012345678901234567</p>
+                                        <p class="mb-1"><strong>Número de cuenta:</strong> 1234567890</p>
+                                        <p class="mb-0 text-muted small">⚠️ Solicita al cliente su comprobante de transferencia</p>
+                                    </div>
+                                </div>
                             </div>
                             <div class="col-md-3">
                                 <label class="form-label">Descuento ($)</label>
@@ -157,7 +138,6 @@
                     </div>
                 </div>
 
-                {{-- Productos --}}
                 <div class="card-ayaf">
                     <div class="card-head">
                         <i class="bi bi-flower1" style="color:var(--rosa);font-size:1.1rem;"></i>
@@ -167,14 +147,12 @@
                         </button>
                     </div>
                     <div class="p-4">
-
                         <div class="row g-1 mb-2 px-1" style="font-size:.75rem;font-weight:700;color:#8a6070;text-transform:uppercase;letter-spacing:.04em;">
                             <div class="col-6">Producto</div>
                             <div class="col-2">Cantidad</div>
                             <div class="col-3">Subtotal</div>
                             <div class="col-1"></div>
                         </div>
-
                         <div id="productos-container">
                             <div class="producto-row row g-2 align-items-center">
                                 <div class="col-6">
@@ -198,13 +176,11 @@
                                 </div>
                             </div>
                         </div>
-
                     </div>
                 </div>
 
             </div>
 
-            {{-- ── Columna derecha: resumen ── --}}
             <div class="col-lg-4">
                 <div class="card-ayaf" style="position:sticky;top:1rem;">
                     <div class="card-head">
@@ -218,7 +194,6 @@
                             <div class="row-t"><span>IVA (16%)</span><strong id="mostrar-iva">$0.00</strong></div>
                             <div class="row-t total-final"><span>Total</span><strong id="mostrar-total">$0.00</strong></div>
                         </div>
-
                         <button type="submit" class="btn btn-rosa w-100 py-3" style="font-size:1rem;">
                             <i class="bi bi-check2-circle me-2"></i>Registrar venta
                         </button>
@@ -236,6 +211,12 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 <script>
 function fmt(n) { return '$' + parseFloat(n).toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ','); }
+
+function verificarTransferencia(select) {
+    const texto = select.options[select.selectedIndex].text.toLowerCase();
+    const info = document.getElementById('info-transferencia');
+    info.style.display = texto.includes('transferencia') ? 'block' : 'none';
+}
 
 function calcularTotales() {
     let subtotal = 0;
