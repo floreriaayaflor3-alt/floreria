@@ -62,7 +62,7 @@ class AuthController extends Controller
             'id_rol' => 4, // Cliente
             'usuario' => $request->usuario,
             'password' => bcrypt($request->password),
-            'correo' => $request->correo,
+            'email' => $request->correo,
             'estado_usuario' => 'Activo'
         ]);
 
@@ -103,7 +103,7 @@ public function recuperarPassword(Request $request)
     // Guardar token
     DB::table('password_reset_tokens')->where('email', $request->correo)->delete();
     DB::table('password_reset_tokens')->insert([
-        'correo' => $request->correo,
+        'email' => $request->correo,
         'token'  => $token,
     ]);
 
