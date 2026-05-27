@@ -93,7 +93,7 @@ body{
 <div class="register-wrapper">
     <div class="register-card">
 
-        <img src="{{ asset('img/ayaflora-logo.png') }}" class="logo" alt="Logo AYAFlora">
+        <img src="{{ asset('img/ayaflora.-logo.png') }}" class="logo" alt="Logo AYAFlora">
 
         <h3 class="text-center title">Crear cuenta</h3>
         <p class="text-center text-muted mb-4">
