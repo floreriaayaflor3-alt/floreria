@@ -106,6 +106,73 @@ a.promo-tarjeta:hover { border-color:#7b2d5b; transform:translateX(4px); backgro
             </div>
         </div>
 
+        {{-- Resumen del día --}}
+        <div class="row g-3 mb-4">
+            <div class="col-md-4">
+                <div class="card card-flor p-3 text-center" style="border-top:3px solid #7b2d5b;">
+                    <p class="text-muted small mb-1">Ventas hoy</p>
+                    <h3 class="fw-bold mb-0" style="color:#7b2d5b;">{{ $countHoy }}</h3>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-flor p-3 text-center" style="border-top:3px solid #198754;">
+                    <p class="text-muted small mb-1">Total recaudado hoy</p>
+                    <h3 class="fw-bold mb-0 text-success">${{ number_format($totalHoy, 2) }}</h3>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="card card-flor p-3 text-center" style="border-top:3px solid #1a6aad;">
+                    <p class="text-muted small mb-1">Total del mes</p>
+                    <h3 class="fw-bold mb-0" style="color:#1a6aad;">${{ number_format($totalMes, 2) }}</h3>
+                </div>
+            </div>
+        </div>
+
+        {{-- Últimas ventas --}}
+        <div class="card card-flor p-4">
+            <div class="d-flex align-items-center justify-content-between mb-3">
+                <h5 class="fw-bold mb-0" style="color:#7b2d5b;">🕐 Mis últimas ventas</h5>
+                <a href="/venta/historial" class="btn btn-sm btn-flor">Ver todas</a>
+            </div>
+            @if($ultimas->isEmpty())
+                <p class="text-muted text-center py-3 mb-0">Aún no tienes ventas registradas.</p>
+            @else
+            <div class="table-responsive">
+                <table class="table table-hover align-middle mb-0">
+                    <thead style="background:#f5e6ef;">
+                        <tr>
+                            <th style="color:#7b2d5b;font-size:.78rem;">Folio</th>
+                            <th style="color:#7b2d5b;font-size:.78rem;">Fecha</th>
+                            <th style="color:#7b2d5b;font-size:.78rem;">Cliente</th>
+                            <th style="color:#7b2d5b;font-size:.78rem;">Método</th>
+                            <th style="color:#7b2d5b;font-size:.78rem;" class="text-end">Total</th>
+                            <th style="color:#7b2d5b;font-size:.78rem;" class="text-center">Estado</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        @foreach($ultimas as $v)
+                        <tr>
+                            <td><span class="folio-tag">{{ $v->folio }}</span></td>
+                            <td style="font-size:.83rem;">{{ \Carbon\Carbon::parse($v->fecha)->format('d/m/Y H:i') }}</td>
+                            <td style="font-size:.83rem;">{{ $v->nombre_cliente ?? 'Sin registro' }}</td>
+                            <td style="font-size:.83rem;">{{ $v->metodo_nombre }}</td>
+                            <td class="text-end fw-bold" style="font-size:.85rem;">${{ number_format($v->total, 2) }}</td>
+                            <td class="text-center">
+                                <span style="background:{{ $v->estado=='Pagado'?'#d4edda':'#fff3cd' }};color:{{ $v->estado=='Pagado'?'#1a5c2a':'#856404' }};border-radius:999px;padding:3px 10px;font-size:.72rem;font-weight:600;">
+                                    {{ $v->estado }}
+                                </span>
+                            </td>
+                            <td><a href="/venta/comprobante/{{ $v->id_venta }}" class="btn-ver-sm">Ver</a></td>
+                        </tr>
+                        @endforeach
+                    </tbody>
+                </table>
+            </div>
+            @endif
+        </div>
+
+
     {{-- ══════════ CLIENTE ══════════ --}}
     @elseif(session('rol') == 'cliente')
 

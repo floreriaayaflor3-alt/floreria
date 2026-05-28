@@ -372,7 +372,7 @@ class CrudController extends Controller
     }
 
     //Toggle estado producto
-    public function productosToggle($id)
+public function productosToggle($id)
 {
     if ($r = $this->verificarAdmin()) return $r;
     $producto = DB::table('producto')->where('id_producto', $id)->first();
