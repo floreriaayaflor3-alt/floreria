@@ -36,7 +36,7 @@ body{
     position:relative;
     overflow:hidden;
     background:
-        linear-gradient(135deg, rgb(255, 255, 255, .10), rgb(255, 255, 255, .10))
+        linear-gradient(135deg, rgba(255, 255, 255, .35), rgba(255, 255, 255, .35))
         url("https://images.unsplash.com/photo-1491994336086-44f5d76dd8f2?q=80&w=1470&auto=format&fit=crop&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D");
     background-size:cover;
     background-position:center;
