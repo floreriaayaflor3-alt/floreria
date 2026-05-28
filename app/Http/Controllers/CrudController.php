@@ -371,6 +371,15 @@ class CrudController extends Controller
         return redirect('/carrito');
     }
 
+    //Toggle estado producto
+    public function productosToggle($id)
+{
+    if ($r = $this->verificarAdmin()) return $r;
+    $producto = DB::table('producto')->where('id_producto', $id)->first();
+    $nuevoEstado = $producto->estado == 'Activo' ? 'Inactivo' : 'Activo';
+    DB::table('producto')->where('id_producto', $id)->update(['estado' => $nuevoEstado]);
+    return redirect('/crud/productos')->with('success', 'Estado del producto actualizado');
+}
     // Toggle estado cliente
 public function clientesToggle($id)
 {
@@ -413,3 +422,4 @@ public function promocionesReciclar(Request $request, $id)
     return redirect('/crud/promociones')->with('success', 'Promoción reciclada correctamente');
 }
 }
+
