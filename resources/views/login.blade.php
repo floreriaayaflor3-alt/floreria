@@ -38,8 +38,8 @@ body{
 
     background-image:
         linear-gradient(
-            rgba(255,255,255,0.15),
-            rgba(255,255,255,0.15)
+            rgba(255,255,255,0.45),
+            rgba(255,255,255,0.45)
         ),
         url('https://images.unsplash.com/photo-1491994336086-44f5d76dd8f2?q=80&w=1470&auto=format&fit=crop');
 
