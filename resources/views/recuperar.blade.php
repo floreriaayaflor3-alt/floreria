@@ -33,7 +33,7 @@ body{
         <div class="alert alert-danger">{{ session('error') }}</div>
     @endif
 
-    <form method="post" action="/recuperar">
+    <form method="POST" action="/recuperar">
         @csrf
         <input type="email" name="correo" class="form-control mb-3" placeholder="Tu correo electrónico" required>
         <button class="btn w-100 text-white" style="background:#7b2d5b;">Enviar link de recuperación</button>
