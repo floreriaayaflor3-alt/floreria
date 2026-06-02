@@ -7,11 +7,18 @@ use Illuminate\Support\Facades\DB;
 class VentaController extends Controller
 {
     private function verificarVendedor()
-    {
-        if (!session('usuario')) return redirect('/');
-        if (session('rol') !== 'vendedor') return redirect('/principal');
-        return null;
+{
+    if (!session('usuario')) return redirect('/');
+
+    if (
+        session('rol') !== 'vendedor' &&
+        session('rol') !== 'admin'
+    ) {
+        return redirect('/principal');
     }
+
+    return null;
+}
 
     public function index()
     {
