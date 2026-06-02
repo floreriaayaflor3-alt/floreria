@@ -49,14 +49,17 @@ Route::get('/principal', function () {
         ->whereMonth('fecha', now()->month)
         ->sum('total');
 
-    $ultimas = \Illuminate\Support\Facades\DB::table('venta')
-            ->leftJoin('cliente', 'venta.id_usuario_cliente', '=', 'cliente.id_usuario')
-            ->join('metodo_pago', 'venta.id_metodo', '=', 'metodo_pago.id_metodo')
-            ->select('venta.*', 'cliente.nombre as nombre_cliente', 'metodo_pago.nombre as metodo_nombre')
-            ->where('id_usuario_vendedor', $idVendedor)
-            ->orderBy('fecha', 'desc')
-            ->limit(5)
-            ->get();
+    $ultimas = DB::table('venta')
+    ->leftJoin('cliente', 'venta.id_usuario_cliente', '=', 'cliente.id_usuario')
+    ->join('metodo_pago', 'venta.id_metodo', '=', 'metodo_pago.id_metodo')
+    ->select(
+        'venta.*',
+        'cliente.nombre as nombre_cliente',
+        'metodo_pago.nombre as metodo_nombre'
+    )
+    ->orderByDesc('venta.fecha')
+    ->limit(5)
+    ->get();
 }
 
     if (session('rol') == 'cliente') {
