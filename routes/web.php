@@ -33,6 +33,35 @@ Route::get('/principal', function () {
     $totalMes    = 0;
     $ultimas     = collect();
 
+
+    if (session('rol') == 'admin') {
+
+    $countHoy = DB::table('venta')
+        ->whereDate('fecha', now())
+        ->count();
+
+    $totalHoy = DB::table('venta')
+        ->whereDate('fecha', now())
+        ->sum('total');
+
+    $totalMes = DB::table('venta')
+        ->whereYear('fecha', now()->year)
+        ->whereMonth('fecha', now()->month)
+        ->sum('total');
+
+    $ultimas = DB::table('venta')
+        ->leftJoin('cliente', 'venta.id_usuario_cliente', '=', 'cliente.id_usuario')
+        ->join('metodo_pago', 'venta.id_metodo', '=', 'metodo_pago.id_metodo')
+        ->select(
+            'venta.*',
+            'cliente.nombre as nombre_cliente',
+            'metodo_pago.nombre as metodo_nombre'
+        )
+        ->orderBy('fecha', 'desc')
+        ->limit(5)
+        ->get();
+}
+
     if (session('rol') == 'cliente') {
         $productos = \Illuminate\Support\Facades\DB::table('producto')
             ->join('categoria', 'producto.id_categoria', '=', 'categoria.id_categoria')
@@ -69,6 +98,7 @@ Route::get('/principal', function () {
             ->limit(5)
             ->get();
     }
+
 
     return view('principal', compact('productos', 'promociones', 'countHoy', 'totalHoy', 'totalMes', 'ultimas'));
 });
